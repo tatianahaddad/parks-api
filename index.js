@@ -8,35 +8,17 @@ function formatQueryParams(params) {
   return queryItems.join('&');
 }
 
-function displayResults(responseJson, maxResults) {
-  console.log("working", responseJson);
-  $('#results-list').empty();
-  // iterate through the articles array, stopping at the max number of results
-  const parks = responseJson.map(function(park) {
-    return `<li><h3>${park.fullName}</h3></li>
-    <li>${park.description}<li>
-    <li><a href="${park.url}">${park.url}</a></li>`;
-  });
-  console.log('it works', parks);
-  $('#results-list').append(parks) 
-  $('#results').removeClass('hidden');
-};
-
 function getParks(query, maxResults=5) {
   const params = {
     parkCode: query,
     limit: maxResults,
     language: "en",
+    "api_key" : apiKey
   };
   const queryString = formatQueryParams(params)
   const url = searchURL + '?' + queryString;
 
   console.log(url);
-
-  const options = {
-    headers: new Headers({
-      "X-Api-Key": apiKey})
-  };
 
   fetch(url)
     .then(response => {
@@ -45,11 +27,33 @@ function getParks(query, maxResults=5) {
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayResults(responseJson, maxResults))
+    .then(responseJson => displayResults(answerItems, maxResults))
     .catch(err => {
       $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
 }
+
+function formatAnswerParams(responseJson) {
+  const answerItems = Object.keys(responseJson)
+   .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(responseJson[key])}`);
+   console.log(answerItems);
+}
+
+function displayResults(answerItems, maxResults) {
+  console.log("working");
+  $('#results-list').empty();
+  // iterate through the articles array, stopping at the max number of results
+  for (let i = 0; i < answerItems & i<maxResults ; i++){
+    $('#results-list').append(
+      `<li><h3>${answerItems.data.fullName}</h3></li>
+    <li>${answerItems.data.description}<li>
+    <li><a href="${answerItems.data.url}">${answerItems.data.url}</a></li>`
+  )};
+  console.log('it works');
+  
+  $('#results').removeClass('hidden');
+};
+
 function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
