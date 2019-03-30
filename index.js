@@ -10,7 +10,7 @@ function formatQueryParams(params) {
 
 function getParks(query, maxResults=5) {
   const params = {
-    parkCode: query,
+    q: query,
     limit: maxResults,
     language: "en",
     "api_key" : apiKey
