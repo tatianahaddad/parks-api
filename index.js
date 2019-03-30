@@ -27,7 +27,9 @@ function getParks(query, maxResults=5) {
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayResults(answerItems, maxResults))
+    .then(responseJson => {
+      displayResults(responseJson.data);
+    }) 
     .catch(err => {
       $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
@@ -39,15 +41,16 @@ function formatAnswerParams(responseJson) {
    console.log(answerItems);
 }
 
-function displayResults(answerItems, maxResults) {
-  console.log("working");
+function displayResults(answerItems) {
+  console.log(answerItems);
   $('#results-list').empty();
   // iterate through the articles array, stopping at the max number of results
-  for (let i = 0; i < answerItems & i<maxResults ; i++){
+  for (let index = 0; index < answerItems.length; index++){
+    console.log(answerItems[index].description);
     $('#results-list').append(
-      `<li><h3>${answerItems.data.fullName}</h3></li>
-    <li>${answerItems.data.description}<li>
-    <li><a href="${answerItems.data.url}">${answerItems.data.url}</a></li>`
+      `<li><h3>${answerItems[index].fullname}</h3></li>
+      <li>${answerItems[index].description}</li>
+      <li><a href="${answerItems[index].url}">${answerItems[index].url}</a></li>`
   )};
   console.log('it works');
   
