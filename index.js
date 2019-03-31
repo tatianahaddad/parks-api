@@ -8,11 +8,12 @@ function formatQueryParams(params) {
   return queryItems.join('&');
 }
 
-function getParks(query, maxResults=5) {
+function getParks(query, searchState, maxResults=5) {
   const params = {
     q: query,
     limit: maxResults,
     language: "en",
+    stateCode: searchState,
     "api_key" : apiKey
   };
   const queryString = formatQueryParams(params)
@@ -61,8 +62,9 @@ function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
     const searchTerm = $('#js-search-term').val();
+    const searchState = $('#js-search-state').val();
     const maxResults = $('#js-max-results').val();
-    getParks(searchTerm, maxResults);
+    getParks(searchTerm, searchState, maxResults);
   });
 }
 
